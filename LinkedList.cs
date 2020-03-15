@@ -26,7 +26,7 @@ namespace AlgorithmsDataStructures
 
         public override string ToString()
         {
-            return "<Node: " + value.ToString();
+            return "<Node: " + value.ToString() + ">";
         }
     }
 
@@ -41,9 +41,29 @@ namespace AlgorithmsDataStructures
             tail = null;
         }
 
+        public LinkedList(List<int> list)
+        {
+            head = null;
+            tail = null;
+            foreach (int _value in list)
+            {
+                AddInTail(new Node(_value));
+            }
+        }
+
+        public LinkedList(List<Node> list)
+        {
+            head = null;
+            tail = null;
+            foreach (Node node in list)
+            {
+                AddInTail(node);
+            }
+        }
+
         public override string ToString()
         {
-            List<Node> nodes = this.GetNodesList();
+            List<Node> nodes = GetNodesList();
             return nodes.ToString();
         }
 
@@ -68,7 +88,6 @@ namespace AlgorithmsDataStructures
         public List<Node> GetNodesList()
         {
             List<Node> nodes = new List<Node>();
-            // здесь будет ваш код поиска всех узлов по заданному значению
             Node node = head;
             while (node != null)
             {
@@ -91,69 +110,78 @@ namespace AlgorithmsDataStructures
             return nodes;
         }
 
-        public bool Remove(int _value)
+        public bool Remove(int _value, bool remove_all = false)
         {
-            Node prev = new Node(0);
-            Node curr = head;
-            prev.next = curr;
-            while (curr != null)
+            bool value_found = false;
+            // shift head
+            while (head != null && head.value == _value)
             {
-                if (curr.value == _value)
+                if (tail == head) tail = head.next;
+                head = head.next;
+                value_found = true;
+                if (!remove_all) break;
+            }
+            // handle other nodes
+            if (head != null && !(!remove_all && value_found))
+            {
+                Node curr = head;
+                Node next = head.next;
+                while (next != null)
                 {
-                    prev.next = curr.next;
-                    if (curr == tail) tail = prev;
-                    else if (curr == head) head = curr.next;
-                    //curr = curr.next;
-                    return true;
-                }
-                else
-                {
-                    prev = prev.next;
-                    curr = curr.next;
+                    if (next.value == _value)
+                    {
+                        value_found = true;
+                        // remove link
+                        curr.next = next.next;
+                        // shift next node
+                        if (tail == next) tail = curr;
+                        next = next.next;
+                        if (!remove_all) break;
+                    }
+                    else
+                    {
+                        // shift both nodes
+                        curr = next;
+                        next = next.next;
+                    }
                 }
             }
-            return false;
+
+            return value_found;
         }
 
         public void RemoveAll(int _value)
         {
-            // здесь будет ваш код удаления всех узлов по заданному значению
-            // 1, 1, 2
-            // 1, 2, 2
-            // 1, 2, 1
-            // 2, 1, 1
-            while (null != head.next && head.value == _value)
-            {
-                head = head.next;
-            }
-            Node node = head;
-            while (node != null)
-            {
-                if (null != node.next && node.next.value == _value)
-                {
-                    node.next = node.next.next;
-                }
-                node = node.next;
-            }
+            Remove(_value, true);
         }
 
         public void Clear()
         {
-            // здесь будет ваш код очистки всего списка
+            head = null;
+            tail = null;
         }
 
         public int Count()
         {
-            return 0; // здесь будет ваш код подсчёта количества элементов в списке
+            return GetNodesList().Count;
         }
 
         public void InsertAfter(Node _nodeAfter, Node _nodeToInsert)
         {
-            // здесь будет ваш код вставки узла после заданного
-
             // если _nodeAfter = null , 
             // добавьте новый элемент первым в списке 
+            if (head == null) AddInTail(_nodeAfter);
+            else if (_nodeAfter == null)
+            {
+                _nodeToInsert.next = head;
+                head = _nodeToInsert;
+            }
+            else
+            {
+                _nodeToInsert.next = _nodeAfter.next;
+                _nodeAfter.next = _nodeToInsert;
+                if (tail == _nodeAfter) tail = _nodeToInsert;
+            }
         }
-
     }
 }
