@@ -1,12 +1,12 @@
 ﻿/*
-1. Добавьте в класс LinkedList метод удаления одного узла по его значению.
-2. Добавьте в класс LinkedList метод удаления всех узлов по конкретному значению.
-3. Добавьте в класс LinkedList метод очистки всего содержимого (создание пустого списка).
-4. Добавьте в класс LinkedList метод поиска всех узлов по конкретному значению (возвращается список/массив найденных узлов).
-5. Добавьте в класс LinkedList метод вычисления длины списка.
-6. Добавьте в класс LinkedList метод вставки узла после заданного узла.
+1. Добавьте в класс LinkedList метод удаления одного узла по его значению. +
+2. Добавьте в класс LinkedList метод удаления всех узлов по конкретному значению. +
+3. Добавьте в класс LinkedList метод очистки всего содержимого (создание пустого списка). +
+4. Добавьте в класс LinkedList метод поиска всех узлов по конкретному значению (возвращается список/массив найденных узлов). +
+5. Добавьте в класс LinkedList метод вычисления длины списка. +
+6. Добавьте в класс LinkedList метод вставки узла после заданного узла. +
 
- * * 7. Напишите проверочные тесты для каждого из предыдущих заданий.
+* 7. Напишите проверочные тесты для каждого из предыдущих заданий.
 * 8. Напишите функцию, которая получает на вход два связных списка, состоящие из целых значений, 
 и если их длины равны, возвращает список, каждый элемент которого равен сумме соответствующих элементов входных списков.
  
@@ -63,8 +63,14 @@ namespace AlgorithmsDataStructures
 
         public override string ToString()
         {
-            List<Node> nodes = GetNodesList();
-            return nodes.ToString();
+            string repr = "";
+            Node node = head;
+            while (node != null)
+            {
+                repr += node.ToString();
+                node = node.next;
+            }
+            return repr;
         }
 
         public void AddInTail(Node _item)
@@ -85,7 +91,7 @@ namespace AlgorithmsDataStructures
             return null;
         }
 
-        public List<Node> GetNodesList()
+        public List<Node> ToList()
         {
             List<Node> nodes = new List<Node>();
             Node node = head;
@@ -163,14 +169,14 @@ namespace AlgorithmsDataStructures
 
         public int Count()
         {
-            return GetNodesList().Count;
+            return ToList().Count;
         }
 
         public void InsertAfter(Node _nodeAfter, Node _nodeToInsert)
         {
             // если _nodeAfter = null , 
             // добавьте новый элемент первым в списке 
-            if (head == null) AddInTail(_nodeAfter);
+            if (head == null) AddInTail(_nodeToInsert);
             else if (_nodeAfter == null)
             {
                 _nodeToInsert.next = head;
