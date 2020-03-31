@@ -14,11 +14,11 @@ namespace AlgorithmsDataStructures
 {
     class LinkedListUtils
     {
-        static LinkedList NodewiseSum(LinkedList list, LinkedList other_list)
+        static LinkedList2 NodewiseSum(LinkedList2 list, LinkedList2 other_list)
         {
             if (list.Count() == other_list.Count())
             {
-                LinkedList result = new LinkedList();
+                LinkedList2 result = new LinkedList2();
                 Node node = list.head;
                 Node other_node = other_list.head;
                 while (node != null && other_node != null)
@@ -33,16 +33,16 @@ namespace AlgorithmsDataStructures
         }
         public static void Main(string[] args)
         {
-            LinkedList list = new LinkedList(new List<Node> { new Node(1), new Node(2), new Node(3) });
-            LinkedList other_list = new LinkedList(new List<Node> { new Node(1), new Node(2), new Node(3) });
+            LinkedList2 list = new LinkedList2(new List<Node> { new Node(1), new Node(2), new Node(3) });
+            LinkedList2 other_list = new LinkedList2(new List<Node> { new Node(1), new Node(2), new Node(3) });
             Console.WriteLine(NodewiseSum(list, other_list));
 
-            LinkedList list_2 = new LinkedList(new List<Node> { new Node(1) });
-            LinkedList other_list_2 = new LinkedList(new List<Node> { new Node(1) });
+            LinkedList2 list_2 = new LinkedList2(new List<Node> { new Node(1) });
+            LinkedList2 other_list_2 = new LinkedList2(new List<Node> { new Node(1) });
             Console.WriteLine(NodewiseSum(list_2, other_list_2));
 
-            LinkedList list_3 = new LinkedList();
-            LinkedList other_list_3 = new LinkedList();
+            LinkedList2 list_3 = new LinkedList2();
+            LinkedList2 other_list_3 = new LinkedList2();
             Console.WriteLine(NodewiseSum(list_3, other_list_3));
         }
     }

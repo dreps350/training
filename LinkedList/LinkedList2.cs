@@ -1,10 +1,10 @@
 ﻿/*
-1. Добавьте в класс LinkedList метод удаления одного узла по его значению. +
-2. Добавьте в класс LinkedList метод удаления всех узлов по конкретному значению. +
-3. Добавьте в класс LinkedList метод очистки всего содержимого (создание пустого списка). +
-4. Добавьте в класс LinkedList метод поиска всех узлов по конкретному значению (возвращается список/массив найденных узлов). +
-5. Добавьте в класс LinkedList метод вычисления длины списка. +
-6. Добавьте в класс LinkedList метод вставки узла после заданного узла. +
+1. Добавьте в класс LinkedList2 метод удаления одного узла по его значению. +
+2. Добавьте в класс LinkedList2 метод удаления всех узлов по конкретному значению. +
+3. Добавьте в класс LinkedList2 метод очистки всего содержимого (создание пустого списка). +
+4. Добавьте в класс LinkedList2 метод поиска всех узлов по конкретному значению (возвращается список/массив найденных узлов). +
+5. Добавьте в класс LinkedList2 метод вычисления длины списка. +
+6. Добавьте в класс LinkedList2 метод вставки узла после заданного узла. +
 
 * 7. Напишите проверочные тесты для каждого из предыдущих заданий.
 * 8. Напишите функцию, которая получает на вход два связных списка, состоящие из целых значений, 
@@ -21,8 +21,13 @@ namespace AlgorithmsDataStructures
     public class Node
     {
         public int value;
-        public Node next;
-        public Node(int _value) { value = _value; }
+        public Node next, prev;
+        public Node(int _value)
+        {
+            value = _value;
+            next = null;
+            prev = null;
+        }
 
         public override string ToString()
         {
@@ -30,18 +35,18 @@ namespace AlgorithmsDataStructures
         }
     }
 
-    public class LinkedList
+    public class LinkedList2
     {
         public Node head;
         public Node tail;
 
-        public LinkedList()
+        public LinkedList2()
         {
             head = null;
             tail = null;
         }
 
-        public LinkedList(List<int> list)
+        public LinkedList2(List<int> list)
         {
             head = null;
             tail = null;
@@ -51,7 +56,7 @@ namespace AlgorithmsDataStructures
             }
         }
 
-        public LinkedList(List<Node> list)
+        public LinkedList2(List<Node> list)
         {
             head = null;
             tail = null;
@@ -75,8 +80,14 @@ namespace AlgorithmsDataStructures
 
         public void AddInTail(Node _item)
         {
-            if (head == null) head = _item;
-            else tail.next = _item;
+            if (head == null) {
+                head = _item;
+                head.next = null;
+                head.prev = null;
+            } else {
+                tail.next = _item;
+                _item.prev = tail;
+            }
             tail = _item;
         }
 
@@ -99,6 +110,18 @@ namespace AlgorithmsDataStructures
             {
                 nodes.Add(node);
                 node = node.next;
+            }
+            return nodes;
+        }
+
+        public List<Node> ToInversedList()
+        {
+            List<Node> nodes = new List<Node>();
+            Node node = tail;
+            while (node != null)
+            {
+                nodes.Add(node);
+                node = node.prev;
             }
             return nodes;
         }

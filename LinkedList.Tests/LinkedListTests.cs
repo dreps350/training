@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+// add prev asserts
 namespace AlgorithmsDataStructures
 {
     public class BaseTest
     {
-        public LinkedList custom_list;
-        public LinkedList empty_list;
-        public LinkedList single_node_list;
-        public LinkedList all_same_nodes_list;
-        public LinkedList simple_list;
+        public LinkedList2 custom_list;
+        public LinkedList2 empty_list;
+        public LinkedList2 single_node_list;
+        public LinkedList2 all_same_nodes_list;
+        public LinkedList2 simple_list;
         public Node n1;
         public Node n2;
         public Node n3;
@@ -27,15 +28,32 @@ namespace AlgorithmsDataStructures
 
         public virtual void InitList()
         {
-            custom_list = new LinkedList();
-            empty_list = new LinkedList();
+            custom_list = new LinkedList2();
+            empty_list = new LinkedList2();
 
-            single_node_list = new LinkedList();
+            single_node_list = new LinkedList2();
             single_node_list.AddInTail(single_node);
             
-            all_same_nodes_list = new LinkedList(new List<Node> { all_same_node_1, all_same_node_2, all_same_node_3 });
+            all_same_nodes_list = new LinkedList2(new List<Node> { all_same_node_1, all_same_node_2, all_same_node_3 });
 
-            simple_list = new LinkedList(new List<Node> { simple_node_1, simple_node_2, simple_node_3 });
+            simple_list = new LinkedList2(new List<Node> { simple_node_1, simple_node_2, simple_node_3 });
+        }
+
+        public void MakeAssertions(
+            LinkedList2 list, 
+            List<Node> expected_nodes, 
+            List<Node> expected_inversed_nodes, 
+            Node expected_head, 
+            Node expected_tail
+            )
+        {
+            List<Node> actual_nodes = list.ToList();
+            List<Node> actual_inversed_nodes = list.ToInversedList();
+
+            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
+            CollectionAssert.AreEqual(expected_inversed_nodes, actual_inversed_nodes);
+            Assert.AreEqual(expected_head, list.head);
+            Assert.AreEqual(expected_tail, list.tail);
         }
     }
     [TestClass]
@@ -58,12 +76,9 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             bool result = empty_list.Remove(1);
-            List<Node> actual_nodes = empty_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
             Assert.AreEqual(false, result);
-            Assert.AreEqual(null, empty_list.head);
-            Assert.AreEqual(null, empty_list.tail);
+            MakeAssertions(empty_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void RemoveSingle()
@@ -71,72 +86,53 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             bool result = single_node_list.Remove(single_node.value);
-            List<Node> actual_nodes = single_node_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(true, result);
-            Assert.AreEqual(null, single_node_list.head);
-            Assert.AreEqual(null, single_node_list.tail);
+            Assert.AreEqual(false, result);
+            MakeAssertions(single_node_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void RemoveSameValues()
         {
-            List<Node> expected_nodes = new List<Node>();
-            expected_nodes.Add(all_same_node_2);
-            expected_nodes.Add(all_same_node_3);
+            List<Node> expected_nodes = new List<Node> { all_same_node_2, all_same_node_3 };
+            List<Node> expected_inversed_nodes = new List<Node> { all_same_node_3, all_same_node_2 };
 
             bool result = all_same_nodes_list.Remove(all_same_node_1.value);
-            List<Node> actual_nodes = all_same_nodes_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
             Assert.AreEqual(true, result);
-            Assert.AreEqual(all_same_node_2, all_same_nodes_list.head);
-            Assert.AreEqual(all_same_node_3, all_same_nodes_list.tail);
+            MakeAssertions(all_same_nodes_list, expected_nodes, expected_inversed_nodes, all_same_node_2, all_same_node_3);
         }
         [TestMethod]
         public void RemoveHead()
         {
-            List<Node> expected_nodes = new List<Node>();
-            expected_nodes.Add(n2);
-            expected_nodes.Add(n3);
+            List<Node> expected_nodes = new List<Node> { n2, n3 };
+            List<Node> expected_inversed_nodes = new List<Node> { n3, n2 };
 
             bool result = custom_list.Remove(n1.value);
-            List<Node> actual_nodes = custom_list.ToList();
             
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
             Assert.AreEqual(true, result);
-            Assert.AreEqual(n2, custom_list.head);
-            Assert.AreEqual(n3, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n2, n3);
         }
         [TestMethod]
         public void RemoveTail()
         {
-            List<Node> expected_nodes = new List<Node>();
-            expected_nodes.Add(n1);
-            expected_nodes.Add(n2);
+            List<Node> expected_nodes = new List<Node> { n1, n2 };
+            List<Node> expected_inversed_nodes = new List<Node> { n2, n1 };
 
             bool result = custom_list.Remove(n3.value);
-            List<Node> actual_nodes = custom_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
             Assert.AreEqual(true, result);
-            Assert.AreEqual(n1, custom_list.head);
-            Assert.AreEqual(n2, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n1, n2);
         }
         [TestMethod]
         public void RemoveMiddle()
         {
-            List<Node> expected_nodes = new List<Node>();
-            expected_nodes.Add(n1);
-            expected_nodes.Add(n3);
+            List<Node> expected_nodes = new List<Node> { n1, n3 };
+            List<Node> expected_inversed_nodes = new List<Node> { n3, n1 };
 
             bool result = custom_list.Remove(n2.value);
-            List<Node> actual_nodes = custom_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
             Assert.AreEqual(true, result);
-            Assert.AreEqual(n1, custom_list.head);
-            Assert.AreEqual(n3, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n1, n3);
         }
     }
     [TestClass]
@@ -153,7 +149,7 @@ namespace AlgorithmsDataStructures
             n5 = new Node(4);
             n6 = new Node(3);
             n7 = new Node(2);
-            custom_list = new LinkedList(new List<Node> { n1, n2, n3, n4, n5, n6, n7 });
+            custom_list = new LinkedList2(new List<Node> { n1, n2, n3, n4, n5, n6, n7 });
         }
         [TestMethod]
         public void RemoveAllEmpty()
@@ -161,11 +157,8 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             empty_list.RemoveAll(1);
-            List<Node> actual_nodes = empty_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, empty_list.head);
-            Assert.AreEqual(null, empty_list.tail);
+            MakeAssertions(empty_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void RemoveSingle()
@@ -173,11 +166,8 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             single_node_list.RemoveAll(single_node.value);
-            List<Node> actual_nodes = single_node_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, single_node_list.head);
-            Assert.AreEqual(null, single_node_list.tail);
+            MakeAssertions(single_node_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void RemoveSameValues()
@@ -185,47 +175,38 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             all_same_nodes_list.RemoveAll(all_same_node_1.value);
-            List<Node> actual_nodes = all_same_nodes_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, all_same_nodes_list.head);
-            Assert.AreEqual(null, all_same_nodes_list.tail);
+            MakeAssertions(all_same_nodes_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void RemoveHead()
         {
             List<Node> expected_nodes = new List<Node> { n3, n4, n5, n6, n7 };
-            
-            custom_list.RemoveAll(n1.value);
-            List<Node> actual_nodes = custom_list.ToList();
+            List<Node> expected_inversed_nodes = new List<Node> { n7, n6, n5, n4, n3 };
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(n3, custom_list.head);
-            Assert.AreEqual(n7, custom_list.tail);
+            custom_list.RemoveAll(n1.value);
+
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n3, n7);
         }
         [TestMethod]
         public void RemoveTail()
         {
             List<Node> expected_nodes = new List<Node> { n1, n2, n4, n5, n6 };
+            List<Node> expected_inversed_nodes = new List<Node> { n6, n5, n4, n2, n1 };
 
             custom_list.RemoveAll(n7.value);
-            List<Node> actual_nodes = custom_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(n1, custom_list.head);
-            Assert.AreEqual(n6, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n1, n6);
         }
         [TestMethod]
         public void RemoveMiddle()
         {
             List<Node> expected_nodes = new List<Node> { n1, n2, n3, n5, n7 };
-
+            List<Node> expected_inversed_nodes = new List<Node> { n7, n5, n3, n2, n1 };
+            
             custom_list.RemoveAll(n4.value);
-            List<Node> actual_nodes = custom_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(n1, custom_list.head);
-            Assert.AreEqual(n7, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n1, n7);
         }
     }
 
@@ -244,7 +225,7 @@ namespace AlgorithmsDataStructures
             n1 = new Node(1);
             n2 = new Node(2);
             n3 = new Node(3);
-            custom_list = new LinkedList(new List<Node> { n1, n2, n3 });
+            custom_list = new LinkedList2(new List<Node> { n1, n2, n3 });
         }
         [TestMethod]
         public void InsertAfterEmptyList()
@@ -252,61 +233,50 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node> { insert_node };
 
             empty_list.InsertAfter(null, insert_node);
-            List<Node> actual_nodes = empty_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(insert_node, empty_list.head);
-            Assert.AreEqual(insert_node, empty_list.tail);
+            MakeAssertions(empty_list, expected_nodes, expected_nodes, insert_node, insert_node);
         }
         [TestMethod]
         public void InsertAfterSingleListLeft()
         {
             List<Node> expected_nodes = new List<Node> { insert_node, single_node };
+            List<Node> expected_inversed_nodes = new List<Node> { single_node, insert_node };
 
             single_node_list.InsertAfter(null, insert_node);
-            List<Node> actual_nodes = single_node_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(insert_node, single_node_list.head);
-            Assert.AreEqual(single_node, single_node_list.tail);
+            MakeAssertions(single_node_list, expected_nodes, expected_inversed_nodes, insert_node, single_node);
         }
         [TestMethod]
         public void InsertAfterSingleListRight()
         {
             List<Node> expected_nodes = new List<Node> { single_node, insert_node };
+            List<Node> expected_inversed_nodes = new List<Node> { insert_node, single_node};
 
             single_node_list.InsertAfter(single_node, insert_node);
-            List<Node> actual_nodes = single_node_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(single_node, single_node_list.head);
-            Assert.AreEqual(insert_node, single_node_list.tail);
+            MakeAssertions(single_node_list, expected_nodes, expected_inversed_nodes, single_node, insert_node);
         }
         [TestMethod]
         public void InsertAfterMultipleLeft()
         {
             List<Node> expected_nodes = new List<Node> { insert_node, insert_node_2, n1, n2, n3 };
+            List<Node> expected_inversed_nodes = new List<Node> { n3, n2, n1, insert_node_2, insert_node};
 
             custom_list.InsertAfter(null, insert_node_2);
             custom_list.InsertAfter(null, insert_node);
-            List<Node> actual_nodes = custom_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(insert_node, custom_list.head);
-            Assert.AreEqual(n3, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, insert_node, n3);
         }
         [TestMethod]
         public void InsertAfterMultipleRight()
         {
             List<Node> expected_nodes = new List<Node> { n1, n2, n3, insert_node, insert_node_2 };
+            List<Node> expected_inversed_nodes = new List<Node> { insert_node_2, insert_node, n3, n2, n1 };
 
-            custom_list.InsertAfter(custom_list.Find(n3.value), insert_node);
-            custom_list.InsertAfter(custom_list.Find(insert_node.value), insert_node_2);
-            List<Node> actual_nodes = custom_list.ToList();
+            custom_list.InsertAfter(n3, insert_node);
+            custom_list.InsertAfter(insert_node, insert_node_2);
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(n1, custom_list.head);
-            Assert.AreEqual(insert_node_2, custom_list.tail);
+            MakeAssertions(custom_list, expected_nodes, expected_inversed_nodes, n1, insert_node_2);
         }
     }
     
@@ -324,11 +294,8 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             empty_list.Clear();
-            List<Node> actual_nodes = empty_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, empty_list.head);
-            Assert.AreEqual(null, empty_list.tail);
+            MakeAssertions(empty_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void ClearSimpleList()
@@ -336,11 +303,8 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             simple_list.Clear();
-            List<Node> actual_nodes = simple_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, simple_list.head);
-            Assert.AreEqual(null, simple_list.tail);
+            MakeAssertions(simple_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
         public void ClearSingleList()
@@ -348,11 +312,8 @@ namespace AlgorithmsDataStructures
             List<Node> expected_nodes = new List<Node>();
 
             single_node_list.Clear();
-            List<Node> actual_nodes = single_node_list.ToList();
 
-            CollectionAssert.AreEqual(expected_nodes, actual_nodes);
-            Assert.AreEqual(null, single_node_list.head);
-            Assert.AreEqual(null, single_node_list.tail);
+            MakeAssertions(single_node_list, expected_nodes, expected_nodes, null, null);
         }
     }
     
@@ -397,7 +358,7 @@ namespace AlgorithmsDataStructures
             n4 = new Node(53);
             n5 = new Node(2);
 
-            custom_list = new LinkedList(new List<Node> { n1, n2, n3, n4, n5 });
+            custom_list = new LinkedList2(new List<Node> { n1, n2, n3, n4, n5 });
             List<Node> expected_nodes = new List<Node> { n2, n3, n5 };
 
             int search_value = n2.value;
