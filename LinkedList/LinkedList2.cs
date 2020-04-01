@@ -141,42 +141,41 @@ namespace AlgorithmsDataStructures
 
         public bool Remove(int _value, bool remove_all = false)
         {
-            bool value_found = false;
-            // shift head
-            while (head != null && head.value == _value)
+            bool _value_found = false;
+            Node node = head;
+            while (node != null)
             {
-                if (tail == head) tail = head.next;
-                head = head.next;
-                value_found = true;
-                if (!remove_all) break;
-            }
-            // handle other nodes
-            if (head != null && !(!remove_all && value_found))
-            {
-                Node curr = head;
-                Node next = head.next;
-                while (next != null)
+                if (node.value == _value)
                 {
-                    if (next.value == _value)
+                    if (node == head && node == tail)
                     {
-                        value_found = true;
-                        // remove link
-                        curr.next = next.next;
-                        // shift next node
-                        if (tail == next) tail = curr;
-                        next = next.next;
-                        if (!remove_all) break;
+                        head = null;
+                        tail = null;
                     }
                     else
                     {
-                        // shift both nodes
-                        curr = next;
-                        next = next.next;
+                        if (node == head)
+                        {
+                            head = node.next;
+                            head.prev = null;
+                        }
+                        else if (node == tail)
+                        {
+                            tail = node.prev;
+                            tail.next = null;
+                        }
+                        else
+                        {
+                            node.prev.next = node.next;
+                            node.next.prev = node.prev;
+                        }
                     }
+                    _value_found = true;
+                    if (!remove_all) { break; }
                 }
+                node = node.next;
             }
-
-            return value_found;
+            return _value_found;
         }
 
         public void RemoveAll(int _value)
@@ -203,12 +202,14 @@ namespace AlgorithmsDataStructures
             else if (_nodeAfter == null)
             {
                 _nodeToInsert.next = head;
+                head.prev = _nodeToInsert;
                 head = _nodeToInsert;
             }
             else
             {
                 _nodeToInsert.next = _nodeAfter.next;
                 _nodeAfter.next = _nodeToInsert;
+                _nodeToInsert.prev = _nodeAfter;
                 if (tail == _nodeAfter) tail = _nodeToInsert;
             }
         }
