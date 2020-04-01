@@ -87,7 +87,7 @@ namespace AlgorithmsDataStructures
 
             bool result = single_node_list.Remove(single_node.value);
 
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(true, result);
             MakeAssertions(single_node_list, expected_nodes, expected_nodes, null, null);
         }
         [TestMethod]
