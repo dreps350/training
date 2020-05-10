@@ -21,11 +21,13 @@ namespace AlgorithmsDataStructures
 
         public T Pop()
         {
-            T value = Peek();
-            if (null != value) {
-                innerList.RemoveLast();
+            if (innerList.Count == 0)
+            {
+                return default(T); // null, если стек пустой
             }
-            return value;
+            var result = (T)innerList.Last.Value;
+            innerList.RemoveLast();
+            return result;
         }
 
         public void Push(T val)

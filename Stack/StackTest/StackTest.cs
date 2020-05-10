@@ -65,9 +65,12 @@ namespace AlgorithmsDataStructures
             object result = stack.Pop();
 
             Assert.AreEqual(values[0], result);
+
+            result = stack.Pop();
+            Assert.AreEqual(null, result);
         }
         [TestMethod]
-        public void PushAndPop()
+        public void PushAndPopString()
         {
             object[] values = { 1, 2 };
             stack.innerList = new LinkedList<object>(values);
@@ -78,12 +81,19 @@ namespace AlgorithmsDataStructures
 
             Assert.AreEqual(pushValue, popValue);
         }
+
         [TestMethod]
-        public void PushAndPop()
+        public void PushAndPopNull()
         {
+            object[] values = { null, null };
+            stack.innerList = new LinkedList<object>(values);
+            object pushValue = null;
 
+            stack.Push(pushValue);
+            var popValue = stack.Pop();
+
+            Assert.AreEqual(pushValue, popValue);
         }
-
 
 
         //[DataTestMethod]
