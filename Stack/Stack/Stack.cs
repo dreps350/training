@@ -22,14 +22,16 @@ namespace AlgorithmsDataStructures
         public T Pop()
         {
             T value = Peek();
-            innerList.RemoveLast();
+            if (null != value) {
+                innerList.RemoveLast();
+            }
             return value;
         }
 
         public void Push(T val)
         {
             // ваш код
-            innerList.AddLast(new LinkedListNode<T>(val));
+            innerList.AddLast(val);
         }
 
         public T Peek()
