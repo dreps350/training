@@ -7,9 +7,15 @@ namespace AlgorithmsDataStructures
     public class Queue<T>
     {
         LinkedList<T> storage;
-        public Queue() => storage = new LinkedList<T>();
+        public Queue()
+        {
+            storage = new LinkedList<T>();
+        }
 
-        public void Enqueue(T item) => storage.AddLast(item);
+        public void Enqueue(T item)
+        {
+            storage.AddLast(item);
+        }
 
         public T Dequeue()
         {
@@ -22,6 +28,9 @@ namespace AlgorithmsDataStructures
             return item;
         }
 
-        public int Size() => storage.Count;
+        public int Size() 
+        {
+            return storage.Count;
+        }
     }
 }
